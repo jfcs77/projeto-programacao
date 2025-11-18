@@ -1,0 +1,11 @@
+# IntelliJ
+.idea/
+*.iml
+out/
+
+# Gradle (se existir)
+.gradle/
+build/
+
+# Outros
+*.zip
