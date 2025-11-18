@@ -5,18 +5,69 @@ fun criaMenu(): String {
             ("0 - Sair\n")
 }
 
-//Nome com duas palavras, c
-fun validaNome(nome: String, tamanhoMinimo : Int = 2): Boolean {
+
+fun validaNome(nome: String, tamanhoMinimo: Int = 3): Boolean {
+    val texto = nome.trim()
+
+    if (texto.length < tamanhoMinimo){
+        return false
+    }
+
+    var indice = 0
+    var nome1 = ""
+    var nome2 = ""
+
+    //fazer nome 1
+    while (indice < texto.length && texto[indice] != ' ') {
+        nome1 += texto[indice]
+        indice++
+    }
+
+    // se não encontrou espaço
+    if (indice == texto.length) {
+        return false
+    }
+
+    //verifica se tem varios
+    while (indice < texto.length && texto[indice] == ' ') {
+        indice++
+    }
+
+    if (indice == texto.length){
+        return false
+    }
+
+    //fazer nome 2
+    while (indice < texto.length && texto[indice] != ' ') {
+        nome2 += texto[indice]
+        indice++
+    }
+
+    //verifica se tem 3 caracteres
+    if (nome1.length < tamanhoMinimo) return false
+    if (nome2.length < tamanhoMinimo) return false
+
+    // verificar maiúsculas
+    if (!nome1[0].isUpperCase()) return false
+    if (!nome2[0].isUpperCase()) return false
+
     return true
 }
+//feito
 fun validaNumeroDeMinas (linhas: Int, colunas: Int, numMinas: Int): Boolean {
-    if (numMinas <= linhas * colunas - 2) {
+
+    if (linhas <= 0 || colunas <= 0) {
+        return false
+    }
+
+    if (numMinas <= linhas * colunas - 2 && numMinas >= 1) {
         return true
     }
     else {
         return false
     }
 }
+//feito
 fun calculaNumeroDeMinas(linhas: Int, colunas: Int): Int {
     val espacosDisponiveis = linhas * colunas - 2
 
@@ -29,6 +80,7 @@ fun calculaNumeroDeMinas(linhas: Int, colunas: Int): Int {
         else -> 15
     }
 }
+//feito
 fun criaLegenda(colunas: Int): String {
     var count = 0
     var legenda= ""
@@ -42,7 +94,7 @@ fun criaLegenda(colunas: Int): String {
     return legenda
 }
 fun criaTerreno(linhas: Int, colunas: Int, numMinas: Int, mostraLegenda: Boolean): String {
-   return "a"
+   return ""
 }
 
 fun main() {
