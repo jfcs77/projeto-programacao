@@ -93,8 +93,21 @@ fun criaLegenda(colunas: Int): String {
     }
     return legenda
 }
-fun criaTerreno(linhas: Int, colunas: Int, numMinas: Int, mostraLegenda: Boolean): String {
-   return ""
+fun criaTerreno(linhas: Int, colunas: Int, numMinas: Int, mostraLegenda: Boolean = true): String {
+    var count = 0
+    var minas = 0
+    var terreno = ""
+    if (mostraLegenda) {
+       terreno += "   ${criaLegenda(colunas)}   "
+    //Se n escolher o numero de minas
+        while (count < linhas * colunas) {
+            terreno += ""
+            while (minas < numMinas) {
+
+            }
+        }
+    }
+    return terreno
 }
 
 fun main() {
