@@ -61,24 +61,24 @@ fun validaNumeroDeMinas (linhas: Int, colunas: Int, numMinas: Int): Boolean {
         return false
     }
 
-    return if (numMinas <= linhas * colunas - 2 && numMinas >= 1) {
-        true
+     if (numMinas <= linhas * colunas - 2 && numMinas >= 1) {
+        return true
     }
     else {
-        false
+       return false
     }
 }
 //feito
 fun calculaNumeroDeMinas(linhas: Int, colunas: Int): Int {
     val espacosDisponiveis = linhas * colunas - 2
 
-    return when (espacosDisponiveis) {
-        1 -> 1
-        in 2..5 -> 2
-        in 6..10 -> 3
-        in 11..20 -> 6
-        in 21..50 -> 10
-        else -> 15
+     when (espacosDisponiveis) {
+        1 -> return 1
+        in 2..5 -> return 2
+        in 6..10 -> return 3
+        in 11..20 -> return 6
+        in 21..50 -> return 10
+        else -> return 15
     }
 }
 //feito
@@ -95,8 +95,43 @@ fun criaLegenda(colunas: Int): String {
     return legenda
 }
 fun criaTerreno(linhas: Int, colunas: Int, numMinas: Int, mostraLegenda: Boolean): String {
-    var terreno = ""
-    return terreno
+
+    if (linhas < 1 || colunas < 1) {
+        return ""
+    }
+
+
+    var colunaAtual = 1
+    var minasColocadas = 0
+    var textLinha = " "
+
+    while (colunaAtual <= colunas) {
+        val conteudoPosicao: String
+        if (colunaAtual == 1) {
+            conteudoPosicao = "J"
+        } else if (colunaAtual == colunas) {
+            conteudoPosicao = "f"
+        } else if (minasColocadas < numMinas) {
+            minasColocadas += 1
+            conteudoPosicao = "*"
+        } else {
+            conteudoPosicao = " "
+        }
+
+        //constroi linha
+        textLinha += conteudoPosicao
+        if (colunaAtual < colunas) {
+            textLinha += " | "
+        }
+        colunaAtual += 1
+    }
+
+
+     if (mostraLegenda) {
+        return "    " + criaLegenda(colunas)+ "    " + "\n" + " 1 " + textLinha + "    "
+    } else {
+        return textLinha + " "
+    }
 }
 
 fun main() {
