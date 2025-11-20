@@ -2,6 +2,7 @@
 fun criaMenu(): String {
     return ("\nBem vindo ao Campo DEISIado\n\n") +
             ("1 - Novo Jogo\n") +
+            ("2 - Ler Jogo\n") +
             ("0 - Sair\n")
 }
 
@@ -94,41 +95,87 @@ fun criaLegenda(colunas: Int): String {
     return legenda
 }
 fun criaTerreno(linhas: Int, colunas: Int, numMinas: Int, mostraLegenda: Boolean = true): String {
-    var count = 0
-    var minas = 0
     var terreno = ""
-    if (mostraLegenda) {
-       terreno += "   ${criaLegenda(colunas)}   "
-    //Se n escolher o numero de minas
-        while (count < linhas * colunas) {
-            terreno += ""
-            while (minas < numMinas) {
-
-            }
-        }
-    }
     return terreno
 }
 
 fun main() {
-//
-//    var opcao : Int?
-//    do {
-//        println(criaMenu())
-//        opcao = readln().toIntOrNull()
-//        when (opcao){
-//            null -> println("Resposta invalida")
-//            !in 0..2 -> println("Resposta invalida")
-//            1 -> {
-//                println("Introduza o nome do jogador")
-//                var nomeJogador = readln().trim()
-//                while (!validaNome(nomeJogador, 3)) {
-//                    println("Resposta invalida.")
-//                    nomeJogador = readln()
-//                }
-//            }
-//            2 -> println("NAO IMPLEMENTADO")
-//            0 -> return
-//        }
-//    } while (opcao != 1 || opcao != 0)
+    var opcao: Int?
+    var nomeJogador: String
+    var legenda : String
+    var mostraLegenda: Boolean
+    var linha: Int?
+    var coluna: Int?
+    var mina: Int?
+    var validaNumMina : Boolean
+    val invalido = "Resposta invalida."
+    //Menu
+    do {
+        println(criaMenu())
+        opcao = readln().toIntOrNull()
+        when (opcao) {
+            null -> println(invalido)
+            !in 0..2 -> println(invalido)
+            2 -> println("NAO IMPLEMENTADO")
+            0 -> return
+        }
+    } while (opcao != 1)
+
+    //Nome do Jogador
+    do {
+        println("Introduz o nome do jogador")
+        nomeJogador = readln()
+        if (!validaNome(nomeJogador)) {
+            println(invalido)
+        }
+    } while (!validaNome(nomeJogador))
+
+    //Verifica se mostra legenda
+    do {
+        println("Mostrar legenda (s/n)?")
+        legenda = readln().trim().lowercase()
+        mostraLegenda = legenda == "s"
+        if (legenda != "s" && legenda != "n") {
+            println(invalido)
+        }
+    } while (legenda != "s" && legenda != "n")
+
+    //Recebe o numero de linhas
+    do {
+        println("Quantas linhas?")
+        linha = readln().toIntOrNull()
+        when {
+            linha == null -> println(invalido)
+            linha != 1 -> println(invalido)
+        }
+    } while (linha != 1)
+
+    //Recebe o numero de colunas
+    do {
+        println("Quantas colunas?")
+        coluna = readln().toIntOrNull()
+        when {
+            coluna == null -> println(invalido)
+            coluna !in 1..26 -> println(invalido)
+        }
+    } while (coluna !in 1..26)
+
+    //Recebe e verifica o número de linhas
+    do {
+        println("Quantas minas (ou enter para o valor por omissao)?")
+        val resposta = readln().trim()
+        mina = if (resposta.isEmpty()) {
+            calculaNumeroDeMinas(linha,coluna!!)
+        }
+        else {
+            resposta.toIntOrNull()
+        }
+        validaNumMina = (mina != null && validaNumeroDeMinas(linha, coluna!!, mina))
+        if (!validaNumMina) {
+            println(invalido)
+        }
+    } while (!validaNumMina)
+
+    //Cria o terreno
+    println(criaTerreno(linha, coluna!!, mina!!))
 }
