@@ -61,23 +61,23 @@ fun validaNumeroDeMinas (linhas: Int, colunas: Int, numMinas: Int): Boolean {
         return false
     }
 
-    if (numMinas <= linhas * colunas - 2 && numMinas >= 1) {
-        return true
+    return if (numMinas <= linhas * colunas - 2 && numMinas >= 1) {
+        true
     }
     else {
-        return false
+        false
     }
 }
 //feito
 fun calculaNumeroDeMinas(linhas: Int, colunas: Int): Int {
     val espacosDisponiveis = linhas * colunas - 2
 
-    return when {
-        espacosDisponiveis == 1 -> 1
-        espacosDisponiveis in 2..5 -> 2
-        espacosDisponiveis in 6..10 -> 3
-        espacosDisponiveis in 11..20 -> 6
-        espacosDisponiveis in 21..50 -> 10
+    return when (espacosDisponiveis) {
+        1 -> 1
+        in 2..5 -> 2
+        in 6..10 -> 3
+        in 11..20 -> 6
+        in 21..50 -> 10
         else -> 15
     }
 }
@@ -154,9 +154,9 @@ fun main() {
     do {
         println("Quantas colunas?")
         coluna = readln().toIntOrNull()
-        when {
-            coluna == null -> println(invalido)
-            coluna !in 1..26 -> println(invalido)
+        when (coluna) {
+            null -> println(invalido)
+            !in 1..26 -> println(invalido)
         }
     } while (coluna !in 1..26)
 
