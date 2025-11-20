@@ -130,7 +130,7 @@ fun criaTerreno(linhas: Int, colunas: Int, numMinas: Int, mostraLegenda: Boolean
      if (mostraLegenda) {
         return "    " + criaLegenda(colunas)+ "    " + "\n" + " 1 " + textLinha + "    "
     } else {
-        return textLinha + " "
+        return "$textLinha "
     }
 }
 
