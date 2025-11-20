@@ -94,7 +94,7 @@ fun criaLegenda(colunas: Int): String {
     }
     return legenda
 }
-fun criaTerreno(linhas: Int, colunas: Int, numMinas: Int, mostraLegenda: String): String {
+fun criaTerreno(linhas: Int, colunas: Int, numMinas: Int, mostraLegenda: Boolean): String {
     var terreno = ""
     return terreno
 }
@@ -177,5 +177,5 @@ fun main() {
     } while (!validaNumMina)
 
     //Cria o terreno
-    println(criaTerreno(linha, coluna!!, mina!!, legenda))
+    println(criaTerreno(linha, coluna!!, mina!!, mostraLegenda))
 }
