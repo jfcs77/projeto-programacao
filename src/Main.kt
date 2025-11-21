@@ -61,7 +61,7 @@ fun validaNumeroDeMinas (linhas: Int, colunas: Int, numMinas: Int): Boolean {
 
     return numMinas <= linhas * colunas - 2 && numMinas >= 1
 }
-//feito
+
 fun calculaNumeroDeMinas(linhas: Int, colunas: Int): Int {
     val espacosDisponiveis = linhas * colunas - 2
 
@@ -74,7 +74,7 @@ fun calculaNumeroDeMinas(linhas: Int, colunas: Int): Int {
         else -> 15
     }
 }
-//feito
+
 fun criaLegenda(colunas: Int): String {
     var count = 0
     var legenda= ""
@@ -87,6 +87,7 @@ fun criaLegenda(colunas: Int): String {
     }
     return legenda
 }
+
 fun criaTerreno(linhas: Int, colunas: Int, numMinas: Int, mostraLegenda: Boolean): String {
 
     if (linhas < 1 || colunas < 1) {
@@ -118,7 +119,6 @@ fun criaTerreno(linhas: Int, colunas: Int, numMinas: Int, mostraLegenda: Boolean
         }
         colunaAtual += 1
     }
-
 
     return if (mostraLegenda) {
         "    " + criaLegenda(colunas)+ "    " + "\n" + " 1 " + textLinha + "    "
