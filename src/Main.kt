@@ -1,11 +1,9 @@
-//Cria o menu
 fun criaMenu(): String {
     return ("\nBem vindo ao Campo DEISIado\n\n") +
             ("1 - Novo Jogo\n") +
             ("2 - Ler Jogo\n") +
             ("0 - Sair\n")
 }
-
 
 fun validaNome(nome: String, tamanhoMinimo: Int = 3): Boolean {
     val texto = nome.trim()
@@ -54,31 +52,26 @@ fun validaNome(nome: String, tamanhoMinimo: Int = 3): Boolean {
 
     return true
 }
-//feito
+
 fun validaNumeroDeMinas (linhas: Int, colunas: Int, numMinas: Int): Boolean {
 
     if (linhas <= 0 || colunas <= 0) {
         return false
     }
 
-     if (numMinas <= linhas * colunas - 2 && numMinas >= 1) {
-        return true
-    }
-    else {
-       return false
-    }
+    return numMinas <= linhas * colunas - 2 && numMinas >= 1
 }
 //feito
 fun calculaNumeroDeMinas(linhas: Int, colunas: Int): Int {
     val espacosDisponiveis = linhas * colunas - 2
 
-     when (espacosDisponiveis) {
-        1 -> return 1
-        in 2..5 -> return 2
-        in 6..10 -> return 3
-        in 11..20 -> return 6
-        in 21..50 -> return 10
-        else -> return 15
+    return when (espacosDisponiveis) {
+        1 -> 1
+        in 2..5 -> 2
+        in 6..10 -> 3
+        in 11..20 -> 6
+        in 21..50 -> 10
+        else -> 15
     }
 }
 //feito
@@ -127,10 +120,10 @@ fun criaTerreno(linhas: Int, colunas: Int, numMinas: Int, mostraLegenda: Boolean
     }
 
 
-     if (mostraLegenda) {
-        return "    " + criaLegenda(colunas)+ "    " + "\n" + " 1 " + textLinha + "    "
+    return if (mostraLegenda) {
+        "    " + criaLegenda(colunas)+ "    " + "\n" + " 1 " + textLinha + "    "
     } else {
-        return "$textLinha "
+        "$textLinha "
     }
 }
 
