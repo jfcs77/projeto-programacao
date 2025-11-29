@@ -137,6 +137,7 @@ fun main() {
     var mina: Int?
     var validaNumMina : Boolean
     val invalido = "Resposta invalida."
+
     //Menu
     do {
         println(criaMenu())
