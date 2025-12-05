@@ -88,43 +88,106 @@ fun criaLegenda(colunas: Int): String {
     return legenda
 }
 
-fun criaTerreno(linhas: Int, colunas: Int, numMinas: Int, mostraLegenda: Boolean): String {
+fun obtemCoordenadas(coordenadas: String): Pair<Int, Int>? {
+    if (coordenadas.length != 2) return null
 
-    if (linhas < 1 || colunas < 1) {
-        return ""
-    }
+    val coluna = coordenadas[0].uppercaseChar()
+    val linha = coordenadas[1]
 
+    if (coluna !in 'A'..'Z') return null
+    if (!linha.isDigit()) return null
 
-    var colunaAtual = 1
-    var minasColocadas = 0
-    var textLinha = " "
+    return Pair(linha.digitToInt() - 1, coluna - 'A')
+}
 
-    while (colunaAtual <= colunas) {
-        val conteudoPosicao: String
-        if (colunaAtual == 1) {
-            conteudoPosicao = "J"
-        } else if (colunaAtual == colunas) {
-            conteudoPosicao = "f"
-        } else if (minasColocadas < numMinas) {
-            minasColocadas += 1
-            conteudoPosicao = "*"
-        } else {
-            conteudoPosicao = " "
-        }
+fun validaCoordenadasDentroTerreno(pair: Pair<Int, Int>, numLinhas: Int, numColunas: Int): Boolean {
+    val (linha, coluna) = pair
 
-        //constroi linha
-        textLinha += conteudoPosicao
-        if (colunaAtual < colunas) {
-            textLinha += " | "
-        }
-        colunaAtual += 1
-    }
+    if (linha < 0 || linha >= numLinhas) return false
+    if (coluna < 0 || coluna >= numColunas) return false
 
-    return if (mostraLegenda) {
-        "    " + criaLegenda(colunas)+ "    " + "\n" + " 1 " + textLinha + "    "
-    } else {
-        "$textLinha "
-    }
+    return true
+}
+
+fun validaMovimentoJogador(pairOrigem: Pair<Int, Int>, pairDestino: Pair<Int, Int>) : Boolean {
+    return true
+}
+
+fun quadradoAVoltaDoPonto(linha: Int, coluna: Int, numLinhas: Int, numColunas: Int) : Pair<Pair<Int, Int>, Pair<Int, Int>> {
+    return Pair(Pair(1,0), Pair(3,2))
+}
+
+fun contaMinasPerto(terreno: Array<Array<Pair<String, Boolean>>>, linhas: Int, coluna: Int) : Int {
+    return 3
+}
+
+fun geraMatrizTerreno(numLinhas: Int,numColunas: Int,numMinas: Int) : Array<Array<Pair<String, Boolean>>>{
+    val terreno = Array(numLinhas){ Array(numColunas) { Pair("",true) } }
+    return terreno
+}
+
+fun preencheNumMinasNoTerreno(terreno: Array<Array<Pair<String, Boolean>>>) : Array<Array<Pair<String, Boolean>>>{
+    return terreno
+}
+
+fun revelaMatriz(terreno: Array<Array<Pair<String, Boolean>>>, linha: Int, coluna: Int) : Array<Array<Pair<String, Boolean>>> {
+    return terreno
+}
+
+fun celulaTemNumeroMinasVisivel(terreno: Array<Array<Pair<String, Boolean>>>, linha: Int, coluna: Int) : Boolean {
+    return false
+}
+
+fun escondeMatriz(terreno: Array<Array<Pair<String, Boolean>>>): Array<Array<Pair<String, Boolean>>> {
+    return terreno
+}
+
+fun criaTerreno(terreno: Array<Array<Pair<String,Boolean>>>, mostraLegenda: Boolean, mostraTudo: Boolean): String {
+
+//    if (linhas < 1 || colunas < 1) {
+//        return ""
+//    }
+//
+//
+//    var colunaAtual = 1
+//    var minasColocadas = 0
+//    var textLinha = " "
+//
+//    while (colunaAtual <= colunas) {
+//        val conteudoPosicao: String
+//        if (colunaAtual == 1) {
+//            conteudoPosicao = "J"
+//        } else if (colunaAtual == colunas) {
+//            conteudoPosicao = "f"
+//        } else if (minasColocadas < numMinas) {
+//            minasColocadas += 1
+//            conteudoPosicao = "*"
+//        } else {
+//            conteudoPosicao = " "
+//        }
+//
+//        //constroi linha
+//        textLinha += conteudoPosicao
+//        if (colunaAtual < colunas) {
+//            textLinha += " | "
+//        }
+//        colunaAtual += 1
+//    }
+//
+//    return if (mostraLegenda) {
+//        "    " + criaLegenda(colunas)+ "    " + "\n" + " 1 " + textLinha + "    "
+//    } else {
+//        "$textLinha "
+//    }
+    return ""
+}
+
+fun lerFicheiroJogo(nomeFicheiro: String, numLinhas: Int, numColunas: Int) : Array<Array<Pair<String, Boolean>>> {
+    val terreno = Array(numLinhas){ Array(numColunas) { Pair("",true) } }
+    return terreno
+}
+fun validaTerreno(terreno: Array<Array<Pair<String, Boolean>>>): Boolean {
+    return false
 }
 
 fun main() {
@@ -206,5 +269,6 @@ fun main() {
     } while (!validaNumMina)
 
     //Cria o terreno
-    println(criaTerreno(linha, coluna!!, mina!!, mostraLegenda))
+    val terreno = geraMatrizTerreno(linha, coluna!!, mina!!)
+    println(criaTerreno(terreno, mostraLegenda, false))
 }
