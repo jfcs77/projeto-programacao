@@ -88,14 +88,16 @@ fun criaLegenda(colunas: Int): String {
     return legenda
 }
 
-fun obtemCoordenadas(coordenadas: String): Pair<Int, Int>? {
-    if (coordenadas.length != 2) return null
+fun obtemCoordenadas(coordenadas: String?): Pair<Int, Int>? {
+    when {
+        coordenadas == null -> return null
+        coordenadas.length != 2 -> return null
+    }
 
-    val coluna = coordenadas[0].uppercaseChar()
-    val linha = coordenadas[1]
+    val linha = coordenadas[0]
+    val coluna = coordenadas[1]
 
-    if (coluna !in 'A'..'Z') return null
-    if (!linha.isDigit()) return null
+    if (coluna !in 'A'..'Z' || !linha.isDigit()) return null
 
     return Pair(linha.digitToInt() - 1, coluna - 'A')
 }
@@ -103,8 +105,8 @@ fun obtemCoordenadas(coordenadas: String): Pair<Int, Int>? {
 fun validaCoordenadasDentroTerreno(pair: Pair<Int, Int>, numLinhas: Int, numColunas: Int): Boolean {
     val (linha, coluna) = pair
 
-    if (linha < 0 || linha >= numLinhas) return false
-    if (coluna < 0 || coluna >= numColunas) return false
+    if (linha !in 0..<numLinhas) return false
+    if (coluna !in 0..<numColunas) return false
 
     return true
 }
