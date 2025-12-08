@@ -105,14 +105,25 @@ fun obtemCoordenadas(coordenadas: String?): Pair<Int, Int>? {
 fun validaCoordenadasDentroTerreno(pair: Pair<Int, Int>, numLinhas: Int, numColunas: Int): Boolean {
     val (linha, coluna) = pair
 
-    if (linha !in 0..<numLinhas) return false
-    if (coluna !in 0..<numColunas) return false
-
-    return true
+    return if (linha !in 0..<numLinhas || coluna !in 0..<numColunas) {
+        false
+    }
+    else {
+        true
+    }
 }
 
 fun validaMovimentoJogador(pairOrigem: Pair<Int, Int>, pairDestino: Pair<Int, Int>) : Boolean {
-    return true
+    var linha = pairDestino.first - pairOrigem.first
+    var coluna = pairDestino.second - pairOrigem.second
+
+    if (linha < 0) {
+        linha *= -1
+    }
+    if (coluna < 0) {
+        coluna *= -1
+    }
+    return (linha <= 2 && coluna <= 2)
 }
 
 fun quadradoAVoltaDoPonto(linha: Int, coluna: Int, numLinhas: Int, numColunas: Int) : Pair<Pair<Int, Int>, Pair<Int, Int>> {
