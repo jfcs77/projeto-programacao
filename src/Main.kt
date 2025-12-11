@@ -97,9 +97,16 @@ fun obtemCoordenadas(coordenadas: String?): Pair<Int, Int>? {
     val linha = coordenadas[0]
     val coluna = coordenadas[1]
 
-    if (coluna !in 'A'..'Z' || !linha.isDigit()) return null
 
-    return Pair(linha.digitToInt() - 1, coluna - 'A')
+    if ((coluna !in 'A'..'Z' && coluna !in 'a'..'z') || !linha.isDigit()) return null
+
+    val letraColuna = if (coluna in 'A'..'Z') {
+        coluna - 'A'
+    } else {
+        coluna - 'a'
+    }
+
+    return Pair(linha.digitToInt() - 1, letraColuna)
 }
 
 fun validaCoordenadasDentroTerreno(pair: Pair<Int, Int>, numLinhas: Int, numColunas: Int): Boolean {
@@ -127,15 +134,113 @@ fun validaMovimentoJogador(pairOrigem: Pair<Int, Int>, pairDestino: Pair<Int, In
 }
 
 fun quadradoAVoltaDoPonto(linha: Int, coluna: Int, numLinhas: Int, numColunas: Int) : Pair<Pair<Int, Int>, Pair<Int, Int>> {
-    return Pair(Pair(1,0), Pair(3,2))
+
+
+    val linhaInicio = if (linha - 1 >= 0) {
+        linha - 1
+    } else {
+        0
+    }
+
+    val colunaInicio = if (coluna - 1 >= 0) {
+        coluna - 1
+    } else{
+        0
+    }
+
+    val linhaFim = if (linha + 1 <= numLinhas - 1){
+        linha + 1
+    } else{
+        numLinhas - 1
+    }
+
+    val colunaFim = if (coluna + 1 <= numColunas - 1) {
+        coluna + 1
+    } else {
+        numColunas - 1
+    }
+
+    return Pair(Pair(linhaInicio, colunaInicio), Pair(linhaFim, colunaFim))
 }
 
 fun contaMinasPerto(terreno: Array<Array<Pair<String, Boolean>>>, linhas: Int, coluna: Int) : Int {
-    return 3
+
+    val limites = quadradoAVoltaDoPonto(linhas, coluna, terreno.size, terreno[0].size)
+    val cantoSuperiorEsquerdo = limites.first
+    val cantoInferiorDireito = limites.second
+
+    val linhaInicio = cantoSuperiorEsquerdo.first
+    val colunaInicio = cantoSuperiorEsquerdo.second
+    val linhaFim = cantoInferiorDireito.first
+    val colunaFim = cantoInferiorDireito.second
+
+    var contadorMinas = 0
+
+    var linhaAtual = linhaInicio
+    while (linhaAtual <= linhaFim) {
+        var colunaAtual = colunaInicio
+        while (colunaAtual <= colunaFim) {
+            // não contar a própria célula
+            if (!(linhaAtual == linhas && colunaAtual == coluna)) {
+                val celula = terreno[linhaAtual][colunaAtual]
+                val conteudo = celula.first
+                if (conteudo == "*") {
+                    contadorMinas += 1
+                }
+            }
+            colunaAtual += 1
+        }
+        linhaAtual += 1
+    }
+
+    return contadorMinas
 }
 
 fun geraMatrizTerreno(numLinhas: Int,numColunas: Int,numMinas: Int) : Array<Array<Pair<String, Boolean>>>{
-    val terreno = Array(numLinhas){ Array(numColunas) { Pair("",true) } }
+    // se dimensoes invalidas retorna uma matriz vazia
+    if (numLinhas <= 0 || numColunas <= 0) {
+        return Array(0) { Array(0) { Pair("", false) } }
+    }
+
+
+    val terreno = Array(numLinhas) { Array(numColunas) { Pair(" ", false) } }
+
+
+    terreno[0][0] = Pair("J", true)
+
+
+    terreno[numLinhas - 1][numColunas - 1] = Pair("f", true)
+
+
+    var minasColocadas = 0
+
+
+    val maxDisponiveis = numLinhas * numColunas - 2 // retira J e f
+    val minasAlvo = if (numMinas > maxDisponiveis) {
+        maxDisponiveis
+    } else {
+        numMinas
+    }
+
+    // loop até colocarmos todas as minas
+    while (minasColocadas < minasAlvo) {
+
+        val linhaRand = (0 until numLinhas).random()
+        val colunaRand = (0 until numColunas).random()
+
+
+        if ((linhaRand == 0 && colunaRand == 0) || (linhaRand == numLinhas - 1 && colunaRand == numColunas - 1)) {
+
+        } else {
+            val conteudoAtual = terreno[linhaRand][colunaRand].first
+
+            if (conteudoAtual != "*") {
+                terreno[linhaRand][colunaRand] = Pair("*", false)
+                minasColocadas += 1
+            }
+        }
+    }
+
     return terreno
 }
 
