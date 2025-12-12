@@ -112,12 +112,7 @@ fun obtemCoordenadas(coordenadas: String?): Pair<Int, Int>? {
 fun validaCoordenadasDentroTerreno(pair: Pair<Int, Int>, numLinhas: Int, numColunas: Int): Boolean {
     val (linha, coluna) = pair
 
-    return if (linha !in 0..<numLinhas || coluna !in 0..<numColunas) {
-        false
-    }
-    else {
-        true
-    }
+    return !(linha !in 0..<numLinhas || coluna !in 0..<numColunas)
 }
 
 fun validaMovimentoJogador(pairOrigem: Pair<Int, Int>, pairDestino: Pair<Int, Int>) : Boolean {
