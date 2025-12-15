@@ -394,7 +394,7 @@ fun validaTerreno(terreno: Array<Array<Pair<String, Boolean>>>): Boolean {
     }
     if (numJ != 1) return false
     if (numf != 1) return false
-    if (numMinas == 0) return false
+    if (numMinas !in 1..(calculaNumeroDeMinas(numLinhas, numColunas))) return false
 
     //Valida num de minas ao redor da célula
     for (linha in 0..<numLinhas) {
@@ -432,10 +432,9 @@ fun main() {
         when (opcao) {
             null -> println(invalido)
             !in 0..2 -> println(invalido)
-            2 -> println("NAO IMPLEMENTADO")
             0 -> return
         }
-    } while (opcao != 1)
+    } while (opcao != 1 && opcao != 2)
 
     //Nome do Jogador
     do {
@@ -476,23 +475,33 @@ fun main() {
         }
     } while (coluna !in 1..26)
 
-    //Recebe e verifica o número de linhas
-    do {
-        println("Quantas minas (ou enter para o valor por omissao)?")
-        val resposta = readln().trim()
-        mina = if (resposta.isEmpty()) {
-            calculaNumeroDeMinas(linha,coluna!!)
-        }
-        else {
-            resposta.toIntOrNull()
-        }
-        validaNumMina = (mina != null && validaNumeroDeMinas(linha, coluna!!, mina))
-        if (!validaNumMina) {
-            println(invalido)
-        }
-    } while (!validaNumMina)
+    if (opcao == 2) {
+        do {
+            println("Qual o ficheiro do jogo a carregar?")
+            val nomeFicheiro = readln()
+        }while ()
+    }
+
+    //Recebe e verifica o número de minas
+    if (opcao == 1){
+        do {
+            println("Quantas minas (ou enter para o valor por omissao)?")
+            val resposta = readln().trim()
+            mina = if (resposta.isEmpty()) {
+                calculaNumeroDeMinas(linha, coluna!!)
+            } else {
+                resposta.toIntOrNull()
+            }
+            validaNumMina = (mina != null && validaNumeroDeMinas(linha, coluna!!, mina))
+            if (!validaNumMina) {
+                println(invalido)
+            }
+        } while (!validaNumMina)
+    }
 
     //Cria o terreno
     val terreno = geraMatrizTerreno(linha, coluna!!, mina!!)
     println(criaTerreno(terreno, mostraLegenda, false))
+
+
 }
