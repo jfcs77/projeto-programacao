@@ -426,91 +426,96 @@ fun main() {
     var nomeFicheiro : String
     val invalido = "Resposta invalida."
 
-    //Menu
-    do {
-        println(criaMenu())
-        opcao = readln().toIntOrNull()
-        when (opcao) {
-            null -> println(invalido)
-            !in 0..2 -> println(invalido)
-            0 -> return
-        }
-    } while (opcao != 1 && opcao != 2)
-
-    //Nome do Jogador
-    do {
-        println("Introduz o nome do jogador")
-        nomeJogador = readln()
-        if (!validaNome(nomeJogador)) {
-            println(invalido)
-        }
-    } while (!validaNome(nomeJogador))
-
-    //Verifica se mostra legenda
-    do {
-        println("Mostrar legenda (s/n)?")
-        legenda = readln().trim().lowercase()
-        mostraLegenda = legenda == "s"
-        if (legenda != "s" && legenda != "n") {
-            println(invalido)
-        }
-    } while (legenda != "s" && legenda != "n")
-
-    //Recebe o numero de linhas
-    do {
-        println("Quantas linhas?")
-        linha = readln().toIntOrNull()
-        when {
-            linha == null -> println(invalido)
-            linha < 1 -> println(invalido)
-        }
-    } while (linha == null || linha < 1)
-
-    //Recebe o numero de colunas
-    do {
-        println("Quantas colunas?")
-        coluna = readln().toIntOrNull()
-        when (coluna) {
-            null -> println(invalido)
-            !in 1..26 -> println(invalido)
-        }
-    } while (coluna !in 1..26)
-
-    if (opcao == 2) {
+    do {    //Menu
         do {
-            println("Qual o ficheiro do jogo a carregar?")
-            nomeFicheiro = readln()
-            if (nomeFicheiro !in ".txt") {
-                println("Ficheiro invalido")
+            println(criaMenu())
+            opcao = readln().toIntOrNull()
+            when (opcao) {
+                null -> println(invalido)
+                !in 0..2 -> println(invalido)
+                0 -> return
             }
-        }while (nomeFicheiro !in ".txt")
+        } while (opcao != 1 && opcao != 2)
 
-        //Cria o terreno
-        val terreno = lerFicheiroJogo(nomeFicheiro, linha, coluna!!)
-    }
-
-    //Recebe e verifica o número de minas
-    if (opcao == 1){
+        //Nome do Jogador
         do {
-            println("Quantas minas (ou enter para o valor por omissao)?")
-            val resposta = readln().trim()
-            mina = if (resposta.isEmpty()) {
-                calculaNumeroDeMinas(linha, coluna!!)
-            } else {
-                resposta.toIntOrNull()
-            }
-            validaNumMina = (mina != null && validaNumeroDeMinas(linha, coluna!!, mina))
-            if (!validaNumMina) {
+            println("Introduz o nome do jogador")
+            nomeJogador = readln()
+            if (!validaNome(nomeJogador)) {
                 println(invalido)
             }
-        } while (!validaNumMina)
+        } while (!validaNome(nomeJogador))
 
-        //Cria o terreno
-        val terreno = geraMatrizTerreno(linha, coluna!!, mina!!)
-        println(criaTerreno(terreno,mostraLegenda,true))
-    }
+        //Verifica se mostra legenda
+        do {
+            println("Mostrar legenda (s/n)?")
+            legenda = readln().trim().lowercase()
+            mostraLegenda = legenda == "s"
+            if (legenda != "s" && legenda != "n") {
+                println(invalido)
+            }
+        } while (legenda != "s" && legenda != "n")
+
+        //Recebe o numero de linhas
+        do {
+            println("Quantas linhas?")
+            linha = readln().toIntOrNull()
+            when {
+                linha == null -> println(invalido)
+                linha < 1 -> println(invalido)
+            }
+        } while (linha == null || linha < 1)
+
+        //Recebe o numero de colunas
+        do {
+            println("Quantas colunas?")
+            coluna = readln().toIntOrNull()
+            when (coluna) {
+                null -> println(invalido)
+                !in 1..26 -> println(invalido)
+            }
+        } while (coluna == null || coluna !in 1..26)
+
+        //Recebe um ficheiro e cria o terren
+        if (opcao == 2) {
+            do {
+                do {
+                    println("Qual o ficheiro do jogo a carregar?")
+                    nomeFicheiro = readln()
+                    if (nomeFicheiro !in ".txt") {
+                        println("Ficheiro invalido")
+                    }
+                } while (nomeFicheiro !in ".txt")
+
+                //Cria o terreno
+                val terreno = lerFicheiroJogo(nomeFicheiro, linha, coluna)
+                val terrenoValido = validaTerreno(terreno)
+
+            } while (!terrenoValido)
+        }
+
+        //Recebe, verifica o número de minas e cria o terreno
+        if (opcao == 1) {
+            do {
+                println("Quantas minas (ou enter para o valor por omissao)?")
+                val resposta = readln().trim()
+                mina = if (resposta.isEmpty()) {
+                    calculaNumeroDeMinas(linha, coluna)
+                } else {
+                    resposta.toIntOrNull()
+                }
+                validaNumMina = (mina != null && validaNumeroDeMinas(linha, coluna, mina))
+                if (!validaNumMina) {
+                    println(invalido)
+                }
+            } while (mina == null || !validaNumMina)
 
 
+            //Cria o terreno
+            val terreno = geraMatrizTerreno(linha, coluna, mina)
+            println(criaTerreno(terreno, mostraLegenda, true))
+        }
 
 
+    }while(opcao != 0)
 }
