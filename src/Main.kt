@@ -423,6 +423,7 @@ fun main() {
     var coluna: Int?
     var mina: Int?
     var validaNumMina : Boolean
+    var nomeFicheiro : String
     val invalido = "Resposta invalida."
 
     //Menu
@@ -478,8 +479,14 @@ fun main() {
     if (opcao == 2) {
         do {
             println("Qual o ficheiro do jogo a carregar?")
-            val nomeFicheiro = readln()
-        }while ()
+            nomeFicheiro = readln()
+            if (nomeFicheiro !in ".txt") {
+                println("Ficheiro invalido")
+            }
+        }while (nomeFicheiro !in ".txt")
+
+        //Cria o terreno
+        val terreno = lerFicheiroJogo(nomeFicheiro, linha, coluna!!)
     }
 
     //Recebe e verifica o número de minas
@@ -497,11 +504,13 @@ fun main() {
                 println(invalido)
             }
         } while (!validaNumMina)
+
+        //Cria o terreno
+        val terreno = geraMatrizTerreno(linha, coluna!!, mina!!)
+        println(criaTerreno(terreno,mostraLegenda,true))
     }
 
-    //Cria o terreno
-    val terreno = geraMatrizTerreno(linha, coluna!!, mina!!)
-    println(criaTerreno(terreno, mostraLegenda, false))
+
 
 
 }
