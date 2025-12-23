@@ -1,4 +1,5 @@
 import java.io.File
+import kotlin.collections.get
 
 fun criaMenu(): String {
     return ("\nBem vindo ao Campo DEISIado\n\n") +
@@ -303,63 +304,161 @@ fun escondeMatriz(terreno: Array<Array<Pair<String, Boolean>>>): Array<Array<Pai
     return terreno
 }
 
+
+
+
 fun criaTerreno(terreno: Array<Array<Pair<String,Boolean>>>, mostraLegenda: Boolean, mostraTudo: Boolean): String {
-
-//    val linhas = terreno.size
-//    val colunas = terreno[0].size
-////    if (linhas < 1 || colunas < 1) {
-////        return ""
-////    }
-//
-//
-//    var colunaAtual = 1
-//    var minasColocadas = 0
-//    var textLinha = " "
-//
-//    while (colunaAtual <= colunas) {
-//        val conteudoPosicao: String
-//        if (colunaAtual == 1) {
-//            conteudoPosicao = "J"
-//        } else if (colunaAtual == colunas) {
-//            conteudoPosicao = "f"
-//        } else if (minasColocadas < numMinas) {
-//            minasColocadas += 1
-//            conteudoPosicao = "*"
-//        } else {
-//            conteudoPosicao = " "
-//        }
-//
-//        //constroi linha
-//        textLinha += conteudoPosicao
-//        if (colunaAtual < colunas) {
-//            textLinha += " | "
-//        }
-//        colunaAtual += 1
-//    }
-//
-//    return if (mostraLegenda) {
-//        "    " + criaLegenda(colunas)+ "    " + "\n" + " 1 " + textLinha + "    "
-//    } else {
-//        "$textLinha "
-//    }
-    return ""
-}
-
-fun lerFicheiroJogo(nomeFicheiro: String, numLinhas: Int, numColunas: Int) : Array<Array<Pair<String, Boolean>>> {
-    val terreno = Array(numLinhas){
-        Array(numColunas) { Pair("",false) }
+    if (terreno.isEmpty()) return ""
+    val numLinhas = terreno.size
+    val numColunas = terreno[0].size
+    val numDigitosLinha = numLinhas.toString().length
+    val resultado = StringBuilder()
+    if (mostraLegenda) {
+        repeat(4) { resultado.append(' ') }
+        var c = 0
+        while (c < numColunas) {
+            resultado.append(('A' + c))
+            if (c < numColunas - 1) resultado.append("   ")
+            c++
+        }
+        repeat(4) { resultado.append(' ') }
+        resultado.append('\n')
     }
-    val ficheiro = File(nomeFicheiro).readLines()
+    var linha = 0
+    while (linha < numLinhas) {
+        if (mostraLegenda) {
+            val numeroLinha = (linha + 1).toString()
+            val need = numDigitosLinha - numeroLinha.length
+            resultado.append(' ')
+            var p = 0
+            while (p < need) {
+                resultado.append(' ')
+                p++
+            }
+            resultado.append(numeroLinha).append("  ")
+        } else {
+            resultado.append(' ')
+        }
+        var coluna = 0
+        while (coluna < numColunas) {
+            val celula = terreno[linha][coluna]
+            val conteudo = if (mostraTudo || celula.second) celula.first else " "
+            resultado.append(conteudo)
+            if (coluna < numColunas - 1) {
+                resultado.append(" | ")
+            } else {
+                // acrescenta um espaço após a última célula apenas quando há legenda
+                if (mostraLegenda) resultado.append(' ')
+            }
+            coluna++
+        }
+        if (mostraLegenda) {
+            repeat(3) { resultado.append(' ') }
+        } else {
+            resultado.append(' ')
+        }
+        if (mostraLegenda || linha < numLinhas - 1) {
+            resultado.append('\n')
+        }
+        if (linha < numLinhas - 1) {
+            val indent = if (mostraLegenda) numDigitosLinha + 2 else 0
+            var sp = 0
+            while (sp < indent) {
+                resultado.append(' ')
+                sp++
+            }
+            var cc = 0
+            while (cc < numColunas) {
+                resultado.append("---")
+                if (cc < numColunas - 1) resultado.append("+")
+                cc++
+            }
+            if (mostraLegenda) {
+                repeat(3) { resultado.append(' ') }
+            }
+            resultado.append('\n')
+        }
+        linha++
+    }
+    return resultado.toString() }
 
-    for (linha in 0..<numLinhas) {
-        for (coluna in 0..<numColunas) {
-            // val celula =
-            terreno[linha][coluna] = Pair("",false)
+
+
+
+
+fun lerFicheiroJogo(nomeFicheiro: String, numLinhas: Int, numColunas: Int): Array<Array<Pair<String, Boolean>>> {
+    if (!nomeFicheiro.endsWith(".txt")) return Array(0) { Array(0) { Pair("", false) } }
+
+    val ficheiro = File(nomeFicheiro)
+    if (!ficheiro.exists()) return Array(0) { Array(0) { Pair("", false) } }
+
+    val linhasFicheiro = ficheiro.readLines()
+    if (linhasFicheiro.size != numLinhas) return Array(0) { Array(0) { Pair("", false) } }
+
+    val matrizTerreno = Array(numLinhas) { Array(numColunas) { Pair(" ", false) } }
+
+    var contadorJ = 0
+    var contadorF = 0
+    var contadorMinas = 0
+
+    for (linha in 0 until numLinhas) {
+        val linhaTexto = linhasFicheiro[linha]
+        val celulasTexto = linhaTexto.split(',')
+        if (celulasTexto.size != numColunas) return Array(0) { Array(0) { Pair("", false) } }
+
+        for (coluna in 0 until numColunas) {
+            var conteudoCelula = celulasTexto[coluna].trim()
+            if (conteudoCelula == "") conteudoCelula = " "
+
+            if (conteudoCelula.length != 1) return Array(0) { Array(0) { Pair("", false) } }
+            val ch = conteudoCelula[0]
+
+            when (ch) {
+                'J' -> {
+                    matrizTerreno[linha][coluna] = Pair("J", true)
+                    contadorJ++
+                }
+                'f' -> {
+                    matrizTerreno[linha][coluna] = Pair("f", true)
+                    contadorF++
+                }
+                '*' -> {
+                    matrizTerreno[linha][coluna] = Pair("*", false)
+                    contadorMinas++
+                }
+                in '1'..'8' -> {
+                    matrizTerreno[linha][coluna] = Pair(ch.toString(), false)
+                }
+                ' ' -> {
+                    matrizTerreno[linha][coluna] = Pair(" ", false)
+                }
+                else -> return Array(0) { Array(0) { Pair("", false) } }
+            }
         }
     }
 
-    return terreno
+    if (contadorJ != 1) return Array(0) { Array(0) { Pair("", false) } }
+    if (contadorF != 1) return Array(0) { Array(0) { Pair("", false) } }
+
+    val maxMinasPermitidas = calculaNumeroDeMinas(numLinhas, numColunas)
+    if (contadorMinas < 1 || contadorMinas > maxMinasPermitidas) return Array(0) { Array(0) { Pair("", false) } }
+
+    // valida números (cada célula '1'..'8' corresponde ao número de minas à volta)
+    for (linha in 0 until numLinhas) {
+        for (coluna in 0 until numColunas) {
+            val valor = matrizTerreno[linha][coluna].first
+            if (valor.length == 1 && valor[0] in '1'..'8') {
+                val colocado = valor.toInt()
+                val esperado = contaMinasPerto(matrizTerreno, linha, coluna)
+                if (colocado != esperado) return Array(0) { Array(0) { Pair("", false) } }
+            }
+        }
+    }
+
+    return matrizTerreno
 }
+
+
 
 fun validaTerreno(terreno: Array<Array<Pair<String, Boolean>>>): Boolean {
 
@@ -383,7 +482,7 @@ fun validaTerreno(terreno: Array<Array<Pair<String, Boolean>>>): Boolean {
 
             val parte1 = terreno[linha][coluna].first
 
-            if (parte1 !in arrayOf("J","f","*","1","2","3","4","5","6","7","8")) return false
+            if (parte1 !in arrayOf("J","f","*"," ","1","2","3","4","5","6","7","8")) return false
 
             when (parte1) {
                 "J" -> numJ ++
@@ -475,25 +574,25 @@ fun main() {
             !in 1..26 -> println(invalido)
         }
     } while (coluna == null || coluna !in 1..26)
-
     //Recebe um ficheiro e cria o terren
     if (opcao == 2) {
-        do{
+        var terrenoValido: Boolean
+        do {
             do {
-                println("Qual o ficheiro do jogo a carregar?")
-                nomeFicheiro = readln()
-                if (nomeFicheiro !in ".txt") {
+                println("Qual o ficheiro de jogo a carregar?")
+                nomeFicheiro = readln().trim()
+                if (!nomeFicheiro.endsWith(".txt")) {
                     println("Ficheiro invalido")
                 }
-            } while (nomeFicheiro !in ".txt")
+            } while (!nomeFicheiro.endsWith(".txt"))
 
-            //Cria o terreno
             val terreno = lerFicheiroJogo(nomeFicheiro, linha, coluna)
-            val terrenoValido = validaTerreno(terreno)
-
+            terrenoValido = validaTerreno(terreno)
+            if (!terrenoValido) {
+                println("Ficheiro invalido")
+            }
         } while (!terrenoValido)
     }
-
     //Recebe, verifica o número de minas e cria o terreno
     if (opcao == 1){
         do {
